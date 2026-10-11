@@ -70,7 +70,6 @@ export default async function StudentsPage({ searchParams }: PageProps<"/student
     <>
       <PageHeader
         title="Students"
-        description="Registered students and their guardians"
         actions={
           <Link href="/students/new" className={buttonVariants()}>
             <Plus /> Register student

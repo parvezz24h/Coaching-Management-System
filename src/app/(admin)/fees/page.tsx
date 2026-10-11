@@ -63,7 +63,6 @@ export default async function FeesPage({ searchParams }: PageProps<"/fees">) {
     <>
       <PageHeader
         title="Fees & dues"
-        description="Tuition, other charges and outstanding balances"
         actions={
           <>
             <ChargeFeeDialog

@@ -70,7 +70,6 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
     <>
       <PageHeader
         title="Payments"
-        description="Cash collections and receipts"
         actions={
           <Link href="/payments/new" className={buttonVariants()}>
             <Plus /> Collect payment

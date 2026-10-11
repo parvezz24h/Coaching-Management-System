@@ -81,7 +81,7 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
 
   return (
     <>
-      <PageHeader title="Batches" description="Groups of students taught together" actions={addButton} />
+      <PageHeader title="Batches" actions={addButton} />
       <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <SearchInput placeholder="Search name or code" />
         <UrlFilter param="year" options={options.academicYears} allLabel="All years" />

@@ -36,7 +36,6 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
   const header = (
     <PageHeader
       title="Results"
-      description="Tabulation sheet and marksheets"
       actions={
         data && (
           <div className="flex gap-2 print:hidden">

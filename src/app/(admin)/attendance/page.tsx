@@ -40,7 +40,6 @@ export default async function AttendancePage({ searchParams }: PageProps<"/atten
     <>
       <PageHeader
         title="Attendance"
-        description={`${WEEKDAY_LABELS[weekday]}, ${formatDate(date)}`}
         actions={
           <Link
             href={`/attendance/report${batchId ? `?batch=${batchId}` : ""}`}

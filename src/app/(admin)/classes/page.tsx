@@ -30,7 +30,7 @@ export default async function ClassesPage() {
 
   return (
     <>
-      <PageHeader title="Classes & academic years" description="School classes, SSC/HSC, and academic sessions" />
+      <PageHeader title="Classes & academic years" />
       <div className="grid gap-4 xl:grid-cols-2">
         <Card>
           <CardHeader>

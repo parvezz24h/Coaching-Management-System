@@ -45,7 +45,6 @@ export default async function AttendanceReportPage({ searchParams }: PageProps<"
     <>
       <PageHeader
         title="Monthly attendance report"
-        description="Day-by-day attendance for one batch"
         actions={
           <>
             <Link href="/attendance" className={cn(buttonVariants({ variant: "ghost" }), "print:hidden")}>

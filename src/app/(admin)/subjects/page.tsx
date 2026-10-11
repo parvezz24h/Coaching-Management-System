@@ -30,7 +30,7 @@ export default async function SubjectsPage() {
 
   return (
     <>
-      <PageHeader title="Subjects" description="Subjects taught at the center" actions={addButton} />
+      <PageHeader title="Subjects" actions={addButton} />
       {subjects.length === 0 ? (
         <EmptyState icon={BookOpen} title="No subjects yet" action={addButton} />
       ) : (

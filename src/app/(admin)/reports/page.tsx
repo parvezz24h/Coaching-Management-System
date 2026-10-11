@@ -56,7 +56,6 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
       <div className="print:hidden">
         <PageHeader
           title="Reports"
-          description="Academic and financial reports — print them or export to Excel (CSV)"
           actions={
             <>
               <PrintButton />

@@ -61,7 +61,7 @@ export default async function ExamsPage({ searchParams }: PageProps<"/exams">) {
 
   return (
     <>
-      <PageHeader title="Exams" description="Create exams, set subjects and enter marks" actions={addButton} />
+      <PageHeader title="Exams" actions={addButton} />
       <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <SearchInput placeholder="Search exams" />
         <UrlFilter param="year" options={options.academicYears} allLabel="All years" />

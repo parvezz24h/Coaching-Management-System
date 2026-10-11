@@ -26,7 +26,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader title="Settings" description="Center information, grading and admin accounts" />
+      <PageHeader title="Settings" />
       <SettingsForm
         defaultValues={{
           name: s?.name ?? "My Coaching Center",

@@ -100,7 +100,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Dashboard" description={`Overview for ${formatDate(today)}`} />
+      <PageHeader title="Dashboard" />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
         <StatCard title="Active students" value={String(students)} icon={Users} href="/students" />

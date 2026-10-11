@@ -73,7 +73,7 @@ export default async function BatchDetailPage({ params }: PageProps<"/batches/[i
     <>
       <PageHeader
         title={batch.name}
-        description={
+        meta={
           <span className="flex items-center gap-2">
             <span className="font-mono">{batch.code}</span>
             <StatusBadge status={batch.status} />

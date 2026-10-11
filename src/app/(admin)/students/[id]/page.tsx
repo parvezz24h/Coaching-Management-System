@@ -96,7 +96,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
     <>
       <PageHeader
         title={student.name}
-        description={
+        meta={
           <span className="flex flex-wrap items-center gap-2">
             <span className="font-mono">{student.studentCode}</span>
             <StatusBadge status={student.status} />

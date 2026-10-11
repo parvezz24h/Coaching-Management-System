@@ -54,7 +54,7 @@ export default async function ExamPage({ params, searchParams }: PageProps<"/exa
     <>
       <PageHeader
         title={exam.name}
-        description={
+        meta={
           <span className="flex flex-wrap items-center gap-2">
             {exam.batch?.name ?? exam.classLevel?.name} · {exam.academicYear.name} · {formatDate(exam.startDate)}
             {exam.endDate && exam.endDate.getTime() !== exam.startDate.getTime() && ` – ${formatDate(exam.endDate)}`}

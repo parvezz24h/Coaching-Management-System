@@ -19,7 +19,7 @@ export default async function EditStudentPage({ params }: PageProps<"/students/[
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader title={`Edit ${student.name}`} description={student.studentCode} />
+      <PageHeader title={`Edit ${student.name}`} meta={<span className="font-mono">{student.studentCode}</span>} />
       <StudentForm
         studentId={student.id}
         classLevels={classLevels.map((c) => ({ value: c.id, label: c.name }))}

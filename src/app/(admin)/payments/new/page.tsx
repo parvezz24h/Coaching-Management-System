@@ -48,7 +48,6 @@ export default async function CollectPaymentPage({ searchParams }: PageProps<"/p
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Collect payment"
-        description="Cash payment against a student's outstanding fees"
         actions={
           <Link href="/payments/new" className={buttonVariants({ variant: "ghost" })}>
             <ArrowLeft /> Change student
@@ -117,7 +116,7 @@ async function PickStudent({ q, symbol }: { q: string; symbol: string }) {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader title="Collect payment" description="Find the student who is paying" />
+      <PageHeader title="Collect payment" />
       <div className="mb-4">
         <SearchInput placeholder="Name, student ID or guardian phone" />
       </div>

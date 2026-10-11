@@ -13,7 +13,7 @@ export default async function NewStudentPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader title="Register student" description="A unique student ID is assigned automatically." />
+      <PageHeader title="Register student" />
       <StudentForm
         classLevels={classLevels.map((c) => ({ value: c.id, label: c.name }))}
         defaultValues={{

@@ -68,7 +68,7 @@ export default async function TeachersPage({ searchParams }: PageProps<"/teacher
 
   return (
     <>
-      <PageHeader title="Teachers" description="Teacher profiles, subjects and batch assignments" actions={addButton} />
+      <PageHeader title="Teachers" actions={addButton} />
       <div className="mb-4">
         <SearchInput placeholder="Search name, ID or phone" />
       </div>

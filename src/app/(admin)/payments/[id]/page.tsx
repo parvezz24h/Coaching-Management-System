@@ -45,7 +45,6 @@ export default async function ReceiptPage({ params }: PageProps<"/payments/[id]"
       <div className="print:hidden">
         <PageHeader
           title={isReversal ? "Reversal" : "Payment receipt"}
-          description={payment.receiptNo}
           actions={
             <>
               <Link href="/payments" className={buttonVariants({ variant: "ghost" })}>
