@@ -5,6 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { Pagination } from "@/components/pagination";
 import { SearchInput } from "@/components/search-input";
@@ -76,10 +77,10 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
           </Link>
         }
       />
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+      <FilterPanel params={["q", "from", "to", "type"]}>
         <SearchInput placeholder="Receipt no., student or ID" />
         <UrlInput param="from" type="date" defaultValue={from} max={today} label="From date" />
-        <span className="hidden text-sm text-muted-foreground sm:inline">to</span>
+        <span className="hidden text-sm text-muted-foreground lg:inline">to</span>
         <UrlInput param="to" type="date" defaultValue={to} max={today} label="To date" />
         <UrlFilter
           param="type"
@@ -89,7 +90,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
           ]}
           allLabel="All types"
         />
-      </div>
+      </FilterPanel>
 
       <div className="mb-4 grid grid-cols-3 gap-2 sm:gap-3">
         <Card size="sm">

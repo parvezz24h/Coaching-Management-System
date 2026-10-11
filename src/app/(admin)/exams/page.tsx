@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { SearchInput } from "@/components/search-input";
 import { UrlFilter } from "@/components/url-filter";
@@ -62,7 +63,7 @@ export default async function ExamsPage({ searchParams }: PageProps<"/exams">) {
   return (
     <>
       <PageHeader title="Exams" actions={addButton} />
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+      <FilterPanel params={["q", "year", "status"]}>
         <SearchInput placeholder="Search exams" />
         <UrlFilter param="year" options={options.academicYears} allLabel="All years" />
         <UrlFilter
@@ -73,7 +74,7 @@ export default async function ExamsPage({ searchParams }: PageProps<"/exams">) {
           ]}
           allLabel="All statuses"
         />
-      </div>
+      </FilterPanel>
       {exams.length === 0 ? (
         <EmptyState
           icon={ClipboardList}

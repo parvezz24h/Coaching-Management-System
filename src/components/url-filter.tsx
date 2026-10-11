@@ -22,7 +22,7 @@ export function UrlFilter({
 
   return (
     <SelectField
-      className={wide ? "col-span-2 sm:w-64" : "sm:w-44"}
+      className={wide ? "col-span-2 lg:w-64" : "lg:w-44"}
       value={searchParams.get(param) ?? ""}
       onChange={(value) => {
         const params = new URLSearchParams(searchParams);

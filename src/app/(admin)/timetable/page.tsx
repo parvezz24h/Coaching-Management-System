@@ -4,6 +4,7 @@ import { CalendarClock, Clock, MapPin, Pencil, Plus, UserRound } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { UrlFilter } from "@/components/url-filter";
 import type { Prisma } from "@/generated/prisma/client";
@@ -90,10 +91,10 @@ export default async function TimetablePage({ searchParams }: PageProps<"/timeta
   return (
     <>
       <PageHeader title="Timetable" actions={addButton} />
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+      <FilterPanel params={["batch", "teacher"]} icon="filter">
         <UrlFilter param="batch" options={batchOptions} allLabel="All batches" />
         <UrlFilter param="teacher" options={teacherOptions} allLabel="All teachers" />
-      </div>
+      </FilterPanel>
 
       {batches.length === 0 ? (
         <EmptyState

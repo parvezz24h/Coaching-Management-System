@@ -5,8 +5,9 @@ import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarNav } from "@/components/app-sidebar";
+import { DrawerAccount } from "@/components/user-menu";
 
-export function MobileNav({ centerName }: { centerName: string }) {
+export function MobileNav({ centerName, name, email }: { centerName: string; name: string; email: string }) {
   const [open, setOpen] = useState(false);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -15,7 +16,11 @@ export function MobileNav({ centerName }: { centerName: string }) {
       </SheetTrigger>
       <SheetContent side="left" className="w-72 max-w-[85vw] p-0" showCloseButton={false}>
         <SheetTitle className="sr-only">Navigation</SheetTitle>
-        <SidebarNav centerName={centerName} onNavigate={() => setOpen(false)} />
+        <SidebarNav
+          centerName={centerName}
+          onNavigate={() => setOpen(false)}
+          footer={<DrawerAccount name={name} email={email} />}
+        />
       </SheetContent>
     </Sheet>
   );

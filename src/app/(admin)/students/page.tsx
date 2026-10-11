@@ -5,6 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { Pagination } from "@/components/pagination";
 import { SearchInput } from "@/components/search-input";
@@ -77,7 +78,7 @@ export default async function StudentsPage({ searchParams }: PageProps<"/student
         }
       />
 
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+      <FilterPanel params={["q", "status", "class", "batch"]}>
         <SearchInput placeholder="Search name, ID or phone" />
         <UrlFilter param="status" options={STATUS_OPTIONS} allLabel="All statuses" />
         <UrlFilter
@@ -86,7 +87,7 @@ export default async function StudentsPage({ searchParams }: PageProps<"/student
           allLabel="All classes"
         />
         <UrlFilter param="batch" options={batches.map((b) => ({ value: b.id, label: b.name }))} allLabel="All batches" />
-      </div>
+      </FilterPanel>
 
       {students.length === 0 ? (
         <EmptyState

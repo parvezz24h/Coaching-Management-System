@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { SidebarNav, SidebarNavView } from "@/components/app-sidebar";
 import { MobileNav } from "@/components/mobile-nav";
 import { PageSkeleton } from "@/components/page-skeleton";
-import { HeaderTitle, PageTitleProvider } from "@/components/page-title";
+import { HeaderPanelSlot, HeaderSlots, HeaderTitle, PageTitleProvider } from "@/components/page-title";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserMenu } from "@/components/user-menu";
 import { db } from "@/lib/db";
@@ -24,9 +24,12 @@ async function HeaderContent() {
   const [session, centerName] = await Promise.all([requireAdmin(), getCenterName()]);
   return (
     <>
-      <MobileNav centerName={centerName} />
+      <MobileNav centerName={centerName} name={session.user.name} email={session.user.email} />
       <HeaderTitle className="flex-1" />
-      <UserMenu name={session.user.name} email={session.user.email} />
+      <HeaderSlots />
+      <div className="hidden lg:block">
+        <UserMenu name={session.user.name} email={session.user.email} />
+      </div>
     </>
   );
 }
@@ -47,18 +50,21 @@ export default function AdminLayout({ children }: LayoutProps<"/">) {
       </aside>
       <PageTitleProvider>
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b bg-background/85 px-4 backdrop-blur supports-backdrop-filter:bg-background/70 lg:px-6 print:hidden">
-            <Suspense
-              fallback={
-                <>
-                  <Skeleton className="h-5 w-40" />
-                  <div className="flex-1" />
-                  <Skeleton className="h-8 w-32" />
-                </>
-              }
-            >
-              <HeaderContent />
-            </Suspense>
+          <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur supports-backdrop-filter:bg-background/70 print:hidden">
+            <div className="flex h-14 items-center gap-2 px-4 lg:px-6">
+              <Suspense
+                fallback={
+                  <>
+                    <Skeleton className="h-5 w-40" />
+                    <div className="flex-1" />
+                    <Skeleton className="h-8 w-32" />
+                  </>
+                }
+              >
+                <HeaderContent />
+              </Suspense>
+            </div>
+            <HeaderPanelSlot />
           </header>
           <main className="flex-1 px-4 py-6 lg:px-8">
             <Suspense fallback={<PageSkeleton />}>

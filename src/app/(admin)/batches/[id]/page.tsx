@@ -104,7 +104,9 @@ export default async function BatchDetailPage({ params }: PageProps<"/batches/[i
                 </Button>
               }
             />
-            <DeleteBatch id={batch.id} name={batch.name} onDeleted="/batches" />
+            <span data-header="body" className="contents">
+              <DeleteBatch id={batch.id} name={batch.name} onDeleted="/batches" />
+            </span>
           </>
         }
       />

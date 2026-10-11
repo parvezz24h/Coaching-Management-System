@@ -49,7 +49,7 @@ export default async function CollectPaymentPage({ searchParams }: PageProps<"/p
       <PageHeader
         title="Collect payment"
         actions={
-          <Link href="/payments/new" className={buttonVariants({ variant: "ghost" })}>
+          <Link href="/payments/new" data-header="body" className={buttonVariants({ variant: "ghost" })}>
             <ArrowLeft /> Change student
           </Link>
         }

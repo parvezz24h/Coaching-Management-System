@@ -4,6 +4,7 @@ import { ArrowLeft, FileBarChart } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { PrintButton } from "@/components/print-button";
 import { UrlFilter } from "@/components/url-filter";
@@ -47,17 +48,17 @@ export default async function AttendanceReportPage({ searchParams }: PageProps<"
         title="Monthly attendance report"
         actions={
           <>
-            <Link href="/attendance" className={cn(buttonVariants({ variant: "ghost" }), "print:hidden")}>
+            <Link href="/attendance" data-header="desktop" className={cn(buttonVariants({ variant: "ghost" }), "print:hidden")}>
               <ArrowLeft /> Attendance
             </Link>
             {batchId && <PrintButton />}
           </>
         }
       />
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center print:hidden">
+      <FilterPanel params={["batch", "month"]} icon="filter" defaultOpen={!batchId} className="print:hidden">
         <UrlFilter param="batch" options={batchOptions} allLabel="Select a batch" wide />
         <UrlInput param="month" type="month" defaultValue={thisMonth} max={thisMonth} label="Month" />
-      </div>
+      </FilterPanel>
     </>
   );
 

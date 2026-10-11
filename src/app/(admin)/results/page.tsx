@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { PrintButton } from "@/components/print-button";
 import { UrlFilter } from "@/components/url-filter";
@@ -68,9 +69,9 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
   return (
     <>
       {header}
-      <div className="mb-4 print:hidden">
+      <FilterPanel params={["exam"]} icon="filter" className="print:hidden">
         <UrlFilter param="exam" options={examOptions} allLabel="Select exam" wide />
-      </div>
+      </FilterPanel>
 
       <Card className="mb-4" size="sm">
         <CardContent className="flex flex-wrap items-center gap-x-8 gap-y-2">

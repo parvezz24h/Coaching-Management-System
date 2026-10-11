@@ -5,14 +5,14 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { BRAND_ICON as Brand, NAV_SECTIONS } from "@/components/nav-items";
 
-type Props = { centerName: string; onNavigate?: () => void };
+type Props = { centerName: string; onNavigate?: () => void; footer?: React.ReactNode };
 
 export function SidebarNav(props: Props) {
   return <SidebarNavView {...props} pathname={usePathname()} />;
 }
 
 /** Hook-free rendering, also used as the static Suspense fallback. */
-export function SidebarNavView({ centerName, onNavigate, pathname }: Props & { pathname: string }) {
+export function SidebarNavView({ centerName, onNavigate, footer, pathname }: Props & { pathname: string }) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-14 items-center gap-2.5 border-b px-4">
@@ -54,6 +54,7 @@ export function SidebarNavView({ centerName, onNavigate, pathname }: Props & { p
           </div>
         ))}
       </nav>
+      {footer && <div className="border-t p-3">{footer}</div>}
     </div>
   );
 }

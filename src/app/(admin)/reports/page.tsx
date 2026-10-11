@@ -4,6 +4,7 @@ import { BarChart3, Download } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { PrintButton } from "@/components/print-button";
 import { UrlFilter } from "@/components/url-filter";
@@ -181,12 +182,12 @@ function Filters({
   const range = (
     <>
       <UrlInput param="from" type="date" defaultValue={from} max={today} label="From date" />
-      <span className="hidden self-center text-sm text-muted-foreground sm:inline">to</span>
+      <span className="hidden self-center text-sm text-muted-foreground lg:inline">to</span>
       <UrlInput param="to" type="date" defaultValue={to} max={today} label="To date" />
     </>
   );
   return (
-    <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+    <FilterPanel params={["batch", "class", "status", "from", "to", "overdue", "year"]} icon="filter">
       {key === "students" && (
         <>
           <UrlFilter param="class" options={classes.map((c) => ({ value: c.id, label: c.name }))} allLabel="All classes" />
@@ -216,6 +217,6 @@ function Filters({
         </>
       )}
       {key === "exams" && <UrlFilter param="year" options={years.map((y) => ({ value: y.id, label: y.name }))} allLabel="All years" />}
-    </div>
+    </FilterPanel>
   );
 }

@@ -47,7 +47,7 @@ export default async function ReceiptPage({ params }: PageProps<"/payments/[id]"
           title={isReversal ? "Reversal" : "Payment receipt"}
           actions={
             <>
-              <Link href="/payments" className={buttonVariants({ variant: "ghost" })}>
+              <Link href="/payments" data-header="desktop" className={buttonVariants({ variant: "ghost" })}>
                 <ArrowLeft /> Payments
               </Link>
               <PrintButton label="Print receipt" />

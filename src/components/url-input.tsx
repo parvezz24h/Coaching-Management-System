@@ -25,7 +25,7 @@ export function UrlInput({
     <Input
       type={type}
       aria-label={label}
-      className="sm:w-44"
+      className="lg:w-44"
       value={searchParams.get(param) ?? defaultValue}
       max={max}
       onChange={(e) => {

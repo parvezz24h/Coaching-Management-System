@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { SearchInput } from "@/components/search-input";
 import { StatusBadge } from "@/components/status-badge";
@@ -82,7 +83,7 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
   return (
     <>
       <PageHeader title="Batches" actions={addButton} />
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+      <FilterPanel params={["q", "year", "class", "status"]}>
         <SearchInput placeholder="Search name or code" />
         <UrlFilter param="year" options={options.academicYears} allLabel="All years" />
         <UrlFilter param="class" options={options.classLevels} allLabel="All classes" />
@@ -94,7 +95,7 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
           ]}
           allLabel="All statuses"
         />
-      </div>
+      </FilterPanel>
 
       {batches.length === 0 ? (
         <EmptyState

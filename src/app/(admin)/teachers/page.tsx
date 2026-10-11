@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { SearchInput } from "@/components/search-input";
 import { StatusBadge } from "@/components/status-badge";
@@ -69,9 +70,9 @@ export default async function TeachersPage({ searchParams }: PageProps<"/teacher
   return (
     <>
       <PageHeader title="Teachers" actions={addButton} />
-      <div className="mb-4">
+      <FilterPanel params={["q"]}>
         <SearchInput placeholder="Search name, ID or phone" />
-      </div>
+      </FilterPanel>
 
       {teachers.length === 0 ? (
         <EmptyState

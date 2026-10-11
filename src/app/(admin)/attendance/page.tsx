@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/empty-state";
+import { FilterPanel } from "@/components/filter-panel";
 import { PageHeader } from "@/components/page-header";
 import { UrlFilter } from "@/components/url-filter";
 import { UrlInput } from "@/components/url-input";
@@ -49,10 +50,10 @@ export default async function AttendancePage({ searchParams }: PageProps<"/atten
           </Link>
         }
       />
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+      <FilterPanel params={["batch", "date"]} icon="filter">
         <UrlFilter param="batch" options={batchOptions} allLabel="All batches (overview)" wide />
         <UrlInput param="date" type="date" defaultValue={today} max={today} label="Attendance date" />
-      </div>
+      </FilterPanel>
     </>
   );
 

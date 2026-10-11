@@ -92,7 +92,11 @@ export default async function ExamPage({ params, searchParams }: PageProps<"/exa
               />
             )}
             <PublishButton id={exam.id} published={published} incomplete={incomplete} />
-            {!published && <DeleteExamButton id={exam.id} name={exam.name} marks={totalMarks} />}
+            {!published && (
+              <span data-header="body" className="contents">
+                <DeleteExamButton id={exam.id} name={exam.name} marks={totalMarks} />
+              </span>
+            )}
           </>
         }
       />

@@ -26,7 +26,7 @@ export default async function MarksheetPage({ params }: PageProps<"/results/[exa
           title="Marksheet"
           actions={
             <>
-              <Link href={`/results?exam=${exam.id}`} className={buttonVariants({ variant: "ghost" })}>
+              <Link href={`/results?exam=${exam.id}`} data-header="desktop" className={buttonVariants({ variant: "ghost" })}>
                 <ArrowLeft /> Results
               </Link>
               <PrintButton label="Print marksheet" />
