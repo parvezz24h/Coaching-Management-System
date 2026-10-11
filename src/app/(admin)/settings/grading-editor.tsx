@@ -66,13 +66,13 @@ export function GradingEditor({ scale }: { scale: GradeRule[] }) {
             {rows.map((r, i) => (
               <TableRow key={i}>
                 <TableCell>
-                  <Input aria-label="Grade" className="h-8 w-20" value={r.grade} onChange={(e) => update(i, { grade: e.target.value })} />
+                  <Input aria-label="Grade" className="h-8 w-16 sm:w-24" value={r.grade} onChange={(e) => update(i, { grade: e.target.value })} />
                 </TableCell>
                 <TableCell>
-                  <Input aria-label="Minimum percent" inputMode="decimal" className="h-8 w-24" value={r.minPercent} onChange={(e) => update(i, { minPercent: e.target.value })} />
+                  <Input aria-label="Minimum percent" inputMode="decimal" className="h-8 w-16 sm:w-24" value={r.minPercent} onChange={(e) => update(i, { minPercent: e.target.value })} />
                 </TableCell>
                 <TableCell>
-                  <Input aria-label="GPA" inputMode="decimal" className="h-8 w-24" value={r.gpa} onChange={(e) => update(i, { gpa: e.target.value })} />
+                  <Input aria-label="GPA" inputMode="decimal" className="h-8 w-16 sm:w-24" value={r.gpa} onChange={(e) => update(i, { gpa: e.target.value })} />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="icon-sm" aria-label={`Remove ${r.grade || "row"}`} disabled={rows.length <= 2} onClick={() => setRows((rs) => rs.filter((_, j) => j !== i))}>

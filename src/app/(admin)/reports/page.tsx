@@ -66,14 +66,22 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
             </>
           }
         />
-        <nav className="mb-4 flex flex-wrap gap-1 border-b" aria-label="Reports">
+        <div className="mb-3 grid sm:hidden">
+          <UrlFilter
+            param="report"
+            wide
+            allLabel={REPORTS[0].label}
+            options={REPORTS.slice(1).map((r) => ({ value: r.key, label: r.label }))}
+          />
+        </div>
+        <nav className="mb-4 hidden flex-wrap gap-1 border-b sm:flex" aria-label="Reports">
           {REPORTS.map((r) => (
             <Link
               key={r.key}
               href={`/reports?report=${r.key}`}
               aria-current={r.key === key ? "page" : undefined}
               className={cn(
-                "-mb-px border-b-2 px-3 py-2 text-sm",
+                "-mb-px shrink-0 border-b-2 px-3 py-2 text-sm whitespace-nowrap",
                 r.key === key ? "border-primary font-medium" : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
@@ -108,8 +116,15 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
           <table className="w-full text-sm print:text-xs">
             <thead className="bg-muted/50 text-xs">
               <tr>
-                {report.columns.map((c) => (
-                  <th key={c.key} className={cn("px-3 py-2 font-medium whitespace-nowrap", numeric(c.type) ? "text-right" : "text-left")}>
+                {report.columns.map((c, ci) => (
+                  <th
+                    key={c.key}
+                    className={cn(
+                      "px-3 py-2 font-medium whitespace-nowrap",
+                      numeric(c.type) ? "text-right" : "text-left",
+                      ci === 0 && "sticky left-0 z-10 bg-muted sm:static sm:bg-transparent",
+                    )}
+                  >
                     {c.label}
                   </th>
                 ))}
@@ -118,11 +133,12 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
             <tbody>
               {report.rows.map((r, i) => (
                 <tr key={i} className="border-t">
-                  {report.columns.map((c) => (
+                  {report.columns.map((c, ci) => (
                     <td
                       key={c.key}
                       className={cn(
-                        "px-3 py-1.5",
+                        "px-3 py-1.5 whitespace-nowrap",
+                        ci === 0 && "sticky left-0 z-10 bg-card sm:static",
                         numeric(c.type) && "text-right tabular-nums",
                         c.key === "code" && "font-mono text-xs",
                         c.key === "rate" && typeof r.rate === "number" && r.rate < 75 && "font-medium text-destructive",
@@ -171,7 +187,7 @@ function Filters({
     </>
   );
   return (
-    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+    <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
       {key === "students" && (
         <>
           <UrlFilter param="class" options={classes.map((c) => ({ value: c.id, label: c.name }))} allLabel="All classes" />

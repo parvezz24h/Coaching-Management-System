@@ -40,8 +40,8 @@ export default async function SubjectsPage() {
               <TableRow>
                 <TableHead className="pl-4">Subject</TableHead>
                 <TableHead>Code</TableHead>
-                <TableHead className="text-right">Teachers</TableHead>
-                <TableHead className="text-right">Batches</TableHead>
+                <TableHead className="hidden text-right sm:table-cell">Teachers</TableHead>
+                <TableHead className="hidden text-right sm:table-cell">Batches</TableHead>
                 <TableHead className="pr-4" />
               </TableRow>
             </TableHeader>
@@ -50,8 +50,8 @@ export default async function SubjectsPage() {
                 <TableRow key={s.id}>
                   <TableCell className="pl-4 font-medium">{s.name}</TableCell>
                   <TableCell className="font-mono text-xs">{s.code}</TableCell>
-                  <TableCell className="text-right tabular-nums">{s._count.teachers}</TableCell>
-                  <TableCell className="text-right tabular-nums">{s._count.batches}</TableCell>
+                  <TableCell className="hidden text-right tabular-nums sm:table-cell">{s._count.teachers}</TableCell>
+                  <TableCell className="hidden text-right tabular-nums sm:table-cell">{s._count.batches}</TableCell>
                   <TableCell className="pr-4">
                     <div className="flex justify-end gap-1">
                       <SubjectDialog

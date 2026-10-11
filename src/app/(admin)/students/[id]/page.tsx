@@ -120,7 +120,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
             <CardTitle>Profile</CardTitle>
           </CardHeader>
           <CardContent>
-            <dl className="grid gap-4 sm:grid-cols-3">
+            <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               <Detail label="Class" value={student.classLevel?.name} />
               <Detail label="School / college" value={student.schoolName} />
               <Detail label="Admission date" value={formatDate(student.admissionDate)} />
@@ -204,7 +204,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
                   <TableHead className="hidden sm:table-cell">Teacher</TableHead>
                   <TableHead className="hidden md:table-cell">Schedule</TableHead>
                   <TableHead>Monthly fee</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="hidden sm:table-cell">Status</TableHead>
                   <TableHead />
                 </TableRow>
               </TableHeader>
@@ -215,6 +215,11 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
                     <TableRow key={e.id}>
                       <TableCell>
                         <span className="font-medium">{e.batch.name}</span>
+                        {e.status !== "ACTIVE" && (
+                          <span className="ml-2 sm:hidden">
+                            <StatusBadge status={e.status} />
+                          </span>
+                        )}
                         <p className="text-xs text-muted-foreground">
                           {e.batch.subject?.name ?? e.batch.code} · since {formatDate(e.enrolledAt)}
                         </p>
@@ -229,7 +234,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
                           </p>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <StatusBadge status={e.status} />
                       </TableCell>
                       <TableCell className="text-right">
@@ -250,7 +255,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="attendance">
-            <TabsList>
+            <TabsList className="max-w-full overflow-x-auto">
               <TabsTrigger value="attendance">Attendance</TabsTrigger>
               <TabsTrigger value="fees">Fees</TabsTrigger>
               <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -272,7 +277,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
                   <TableBody>
                     {recentAttendance.map((a) => (
                       <TableRow key={a.id}>
-                        <TableCell>{formatDate(a.date)}</TableCell>
+                        <TableCell className="whitespace-nowrap">{formatDate(a.date)}</TableCell>
                         <TableCell>{a.batch.name}</TableCell>
                         <TableCell>
                           <Badge
@@ -297,9 +302,9 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
                   <TableHeader>
                     <TableRow>
                       <TableHead>Fee</TableHead>
-                      <TableHead>Due date</TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
-                      <TableHead className="text-right">Paid</TableHead>
+                      <TableHead className="hidden sm:table-cell">Due date</TableHead>
+                      <TableHead className="hidden text-right md:table-cell">Amount</TableHead>
+                      <TableHead className="hidden text-right md:table-cell">Paid</TableHead>
                       <TableHead className="text-right">Balance</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead />
@@ -310,12 +315,17 @@ export default async function StudentDetailPage({ params }: PageProps<"/students
                       const overdue = (f.status === "UNPAID" || f.status === "PARTIAL") && f.dueDate < today;
                       return (
                       <TableRow key={f.id}>
-                        <TableCell>{f.title}</TableCell>
-                        <TableCell className={overdue ? "font-medium text-destructive" : undefined}>{formatDate(f.dueDate)}</TableCell>
-                        <TableCell className="text-right tabular-nums">
+                        <TableCell>
+                          {f.title}
+                          <p className={`text-xs sm:hidden ${overdue ? "font-medium text-destructive" : "text-muted-foreground"}`}>
+                            Due {formatDate(f.dueDate)}
+                          </p>
+                        </TableCell>
+                        <TableCell className={`hidden sm:table-cell ${overdue ? "font-medium text-destructive" : ""}`}>{formatDate(f.dueDate)}</TableCell>
+                        <TableCell className="hidden text-right tabular-nums md:table-cell">
                           {formatMoney(toNumber(f.amount) - toNumber(f.discount), symbol)}
                         </TableCell>
-                        <TableCell className="text-right tabular-nums">{formatMoney(f.paidAmount, symbol)}</TableCell>
+                        <TableCell className="hidden text-right tabular-nums md:table-cell">{formatMoney(f.paidAmount, symbol)}</TableCell>
                         <TableCell className="text-right tabular-nums">{formatMoney(fromPaisa(feeBalance(f)), symbol)}</TableCell>
                         <TableCell>
                           <StatusBadge status={overdue ? "OVERDUE" : f.status} />

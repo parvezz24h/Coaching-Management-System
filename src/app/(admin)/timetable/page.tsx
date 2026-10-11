@@ -90,7 +90,7 @@ export default async function TimetablePage({ searchParams }: PageProps<"/timeta
   return (
     <>
       <PageHeader title="Timetable" description="Weekly class schedule for active batches" actions={addButton} />
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <UrlFilter param="batch" options={batchOptions} allLabel="All batches" />
         <UrlFilter param="teacher" options={teacherOptions} allLabel="All teachers" />
       </div>

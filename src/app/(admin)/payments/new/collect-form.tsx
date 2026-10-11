@@ -120,8 +120,8 @@ export function CollectForm({
             <TableHead className="w-8" />
             <TableHead>Fee</TableHead>
             <TableHead className="hidden sm:table-cell">Due</TableHead>
-            <TableHead className="text-right">Balance</TableHead>
-            <TableHead className="w-36 text-right">Paying now</TableHead>
+            <TableHead className="hidden text-right sm:table-cell">Balance</TableHead>
+            <TableHead className="w-28 text-right sm:w-36">Paying now</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -136,15 +136,20 @@ export function CollectForm({
                     onCheckedChange={(c) => setAmounts((a) => ({ ...a, [f.id]: c ? f.balance : "" }))}
                   />
                 </TableCell>
-                <TableCell>{f.title}</TableCell>
+                <TableCell className="whitespace-normal">
+                  {f.title}
+                  <p className={cn("text-xs sm:hidden", f.overdue ? "font-medium text-destructive" : "text-muted-foreground")}>
+                    Due {f.dueDate} · {formatMoney(f.balance, symbol)} left
+                  </p>
+                </TableCell>
                 <TableCell className={cn("hidden sm:table-cell", f.overdue && "font-medium text-destructive")}>{f.dueDate}</TableCell>
-                <TableCell className="text-right tabular-nums">{formatMoney(f.balance, symbol)}</TableCell>
+                <TableCell className="hidden text-right tabular-nums sm:table-cell">{formatMoney(f.balance, symbol)}</TableCell>
                 <TableCell className="text-right">
                   <Input
                     inputMode="decimal"
                     aria-label={`Amount for ${f.title}`}
                     aria-invalid={!!errors[f.id] || undefined}
-                    className="ml-auto h-8 w-32 text-right tabular-nums"
+                    className="ml-auto h-8 w-24 text-right tabular-nums sm:w-32"
                     value={amounts[f.id] ?? ""}
                     onChange={(e) => setAmounts((a) => ({ ...a, [f.id]: e.target.value }))}
                   />

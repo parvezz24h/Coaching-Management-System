@@ -78,7 +78,7 @@ export default async function StudentsPage({ searchParams }: PageProps<"/student
         }
       />
 
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <SearchInput placeholder="Search name, ID or phone" />
         <UrlFilter param="status" options={STATUS_OPTIONS} allLabel="All statuses" />
         <UrlFilter

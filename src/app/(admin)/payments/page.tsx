@@ -77,7 +77,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
           </Link>
         }
       />
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <SearchInput placeholder="Receipt no., student or ID" />
         <UrlInput param="from" type="date" defaultValue={from} max={today} label="From date" />
         <span className="hidden text-sm text-muted-foreground sm:inline">to</span>
@@ -92,28 +92,28 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
         />
       </div>
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-3">
+      <div className="mb-4 grid grid-cols-3 gap-2 sm:gap-3">
         <Card size="sm">
           <CardContent>
             <p className="text-xs text-muted-foreground">Collected</p>
-            <p className="text-xl font-semibold tabular-nums">{formatMoney(fromPaisa(sumOf("PAYMENT")), symbol)}</p>
-            <p className="text-xs text-muted-foreground">{countOf("PAYMENT")} receipts</p>
+            <p className="text-base font-semibold tabular-nums sm:text-xl">{formatMoney(fromPaisa(sumOf("PAYMENT")), symbol)}</p>
+            <p className="hidden text-xs text-muted-foreground sm:block">{countOf("PAYMENT")} receipts</p>
           </CardContent>
         </Card>
         <Card size="sm">
           <CardContent>
             <p className="text-xs text-muted-foreground">Reversed</p>
-            <p className={cn("text-xl font-semibold tabular-nums", countOf("REVERSAL") > 0 && "text-destructive")}>
+            <p className={cn("text-base font-semibold tabular-nums sm:text-xl", countOf("REVERSAL") > 0 && "text-destructive")}>
               {formatMoney(fromPaisa(sumOf("REVERSAL")), symbol)}
             </p>
-            <p className="text-xs text-muted-foreground">{countOf("REVERSAL")} reversals</p>
+            <p className="hidden text-xs text-muted-foreground sm:block">{countOf("REVERSAL")} reversals</p>
           </CardContent>
         </Card>
         <Card size="sm">
           <CardContent>
             <p className="text-xs text-muted-foreground">Net cash</p>
-            <p className="text-xl font-semibold tabular-nums">{formatMoney(fromPaisa(sumOf("PAYMENT") + sumOf("REVERSAL")), symbol)}</p>
-            <p className="text-xs text-muted-foreground">For the selected dates</p>
+            <p className="text-base font-semibold tabular-nums sm:text-xl">{formatMoney(fromPaisa(sumOf("PAYMENT") + sumOf("REVERSAL")), symbol)}</p>
+            <p className="hidden text-xs text-muted-foreground sm:block">For the selected dates</p>
           </CardContent>
         </Card>
       </div>
@@ -122,7 +122,29 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
         <EmptyState icon={Receipt} title="No payments in this period" description="Collected payments will appear here." />
       ) : (
         <>
-          <Card className="py-0">
+          <ul className="divide-y rounded-xl border bg-card md:hidden">
+            {payments.map((p) => (
+              <li key={p.id}>
+                <Link href={`/payments/${p.id}`} className="flex items-center gap-3 p-3 active:bg-muted">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{p.student.name}</p>
+                    <p className={cn("font-mono text-xs text-muted-foreground", p.reversedBy && "line-through")}>{p.receiptNo}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatDateTime(p.paidAt)}
+                      {p.reversedBy && " · reversed"}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className={cn("font-semibold tabular-nums", p.type === "REVERSAL" && "text-destructive", p.reversedBy && "text-muted-foreground line-through")}>
+                      {formatMoney(p.amount, symbol)}
+                    </p>
+                    {p.type === "REVERSAL" && <StatusBadge status="REVERSAL" />}
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Card className="hidden py-0 md:block">
             <Table>
               <TableHeader>
                 <TableRow>

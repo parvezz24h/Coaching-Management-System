@@ -37,7 +37,7 @@ export function SidebarNavView({ centerName, onNavigate, pathname }: Props & { p
                       onClick={onNavigate}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors",
+                        "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors pointer-coarse:py-2.5",
                         active
                           ? "bg-primary/10 font-medium text-primary"
                           : "text-foreground/80 hover:bg-muted hover:text-foreground",

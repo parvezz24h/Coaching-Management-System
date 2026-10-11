@@ -72,14 +72,14 @@ export function ExamSubjectDialog({
               )}
             />
           </Field>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             <Field label="Full marks" htmlFor="es-full" error={errors.fullMarks?.message} required>
               <Input id="es-full" inputMode="decimal" {...form.register("fullMarks")} />
             </Field>
             <Field label="Pass marks" htmlFor="es-pass" error={errors.passMarks?.message} required>
               <Input id="es-pass" inputMode="decimal" {...form.register("passMarks")} />
             </Field>
-            <Field label="Date" htmlFor="es-date" error={errors.examDate?.message}>
+            <Field label="Date" htmlFor="es-date" error={errors.examDate?.message} className="col-span-2 sm:col-span-1">
               <Input id="es-date" type="date" {...form.register("examDate")} />
             </Field>
           </div>

@@ -128,8 +128,10 @@ export default async function ExamPage({ params, searchParams }: PageProps<"/exa
                 <TableRow>
                   <TableHead>Subject</TableHead>
                   <TableHead className="hidden sm:table-cell">Date</TableHead>
-                  <TableHead className="text-right">Full</TableHead>
-                  <TableHead className="text-right">Pass</TableHead>
+                  <TableHead className="text-right">
+                    Full<span className="sm:hidden"> / pass</span>
+                  </TableHead>
+                  <TableHead className="hidden text-right sm:table-cell">Pass</TableHead>
                   <TableHead className="text-right">Entered</TableHead>
                   <TableHead />
                 </TableRow>
@@ -139,8 +141,11 @@ export default async function ExamPage({ params, searchParams }: PageProps<"/exa
                   <TableRow key={s.id}>
                     <TableCell className="font-medium">{s.subject.name}</TableCell>
                     <TableCell className="hidden sm:table-cell">{s.examDate ? formatDate(s.examDate) : "—"}</TableCell>
-                    <TableCell className="text-right tabular-nums">{s.fullMarks.toString()}</TableCell>
-                    <TableCell className="text-right tabular-nums">{s.passMarks.toString()}</TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {s.fullMarks.toString()}
+                      <span className="text-muted-foreground sm:hidden"> / {s.passMarks.toString()}</span>
+                    </TableCell>
+                    <TableCell className="hidden text-right tabular-nums sm:table-cell">{s.passMarks.toString()}</TableCell>
                     <TableCell className={cn("text-right tabular-nums", countOf(s.id) < rows.length && "text-amber-600 dark:text-amber-400")}>
                       {countOf(s.id)}/{rows.length}
                     </TableCell>

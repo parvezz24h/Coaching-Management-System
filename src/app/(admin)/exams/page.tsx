@@ -62,7 +62,7 @@ export default async function ExamsPage({ searchParams }: PageProps<"/exams">) {
   return (
     <>
       <PageHeader title="Exams" description="Create exams, set subjects and enter marks" actions={addButton} />
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <SearchInput placeholder="Search exams" />
         <UrlFilter param="year" options={options.academicYears} allLabel="All years" />
         <UrlFilter
@@ -87,7 +87,7 @@ export default async function ExamsPage({ searchParams }: PageProps<"/exams">) {
             <TableHeader>
               <TableRow>
                 <TableHead className="pl-4">Exam</TableHead>
-                <TableHead>For</TableHead>
+                <TableHead className="hidden sm:table-cell">For</TableHead>
                 <TableHead className="hidden md:table-cell">Dates</TableHead>
                 <TableHead className="hidden text-right sm:table-cell">Subjects</TableHead>
                 <TableHead className="hidden text-right lg:table-cell">Marks entered</TableHead>
@@ -101,9 +101,12 @@ export default async function ExamsPage({ searchParams }: PageProps<"/exams">) {
                     <Link href={`/exams/${e.id}`} className="font-medium hover:underline">
                       {e.name}
                     </Link>
-                    <p className="text-xs text-muted-foreground">{e.academicYear.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {e.academicYear.name}
+                      <span className="sm:hidden"> · {e.batch?.name ?? e.classLevel?.name}</span>
+                    </p>
                   </TableCell>
-                  <TableCell>{e.batch?.name ?? e.classLevel?.name ?? "—"}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{e.batch?.name ?? e.classLevel?.name ?? "—"}</TableCell>
                   <TableCell className="hidden md:table-cell">
                     {formatDate(e.startDate)}
                     {e.endDate && e.endDate.getTime() !== e.startDate.getTime() && ` – ${formatDate(e.endDate)}`}

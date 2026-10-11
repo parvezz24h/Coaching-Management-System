@@ -86,7 +86,7 @@ export function MarksSheet({
 
   return (
     <div>
-      <div className="flex flex-col gap-3 border-b pb-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky top-14 z-20 flex flex-col gap-3 border-b bg-card py-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted-foreground">
           Full marks {fullMarks} · pass {passMarks} · {entered}/{students.length} entered
           {readOnly && " · locked (published)"}
@@ -101,11 +101,13 @@ export function MarksSheet({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-10">#</TableHead>
+            <TableHead className="hidden w-10 sm:table-cell">#</TableHead>
             <TableHead>Student</TableHead>
-            <TableHead className="w-36">Marks</TableHead>
-            <TableHead className="w-24">Absent</TableHead>
-            <TableHead className="w-20 text-right">Grade</TableHead>
+            <TableHead className="w-24 sm:w-36">Marks</TableHead>
+            <TableHead className="w-12 sm:w-24">
+              Abs<span className="hidden sm:inline">ent</span>
+            </TableHead>
+            <TableHead className="w-12 text-right sm:w-20">Grade</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -123,7 +125,7 @@ export function MarksSheet({
             const dirty = e.obtained.trim() !== saved[s.id].obtained.trim() || e.absent !== saved[s.id].absent;
             return (
               <TableRow key={s.id} className={cn(dirty && "bg-primary/5")}>
-                <TableCell className="text-muted-foreground tabular-nums">{i + 1}</TableCell>
+                <TableCell className="hidden text-muted-foreground tabular-nums sm:table-cell">{i + 1}</TableCell>
                 <TableCell>
                   <span className="font-medium">{s.name}</span>
                   <p className="font-mono text-xs text-muted-foreground">{s.studentCode}</p>
@@ -137,7 +139,7 @@ export function MarksSheet({
                     aria-label={`Marks for ${s.name}`}
                     aria-invalid={!!error || undefined}
                     disabled={readOnly || pending || e.absent}
-                    className="h-8 w-24 text-right tabular-nums"
+                    className="h-8 w-20 text-right tabular-nums sm:w-24"
                     value={e.absent ? "" : e.obtained}
                     placeholder={e.absent ? "Absent" : "—"}
                     onChange={(ev) => update(s.id, { obtained: ev.target.value })}

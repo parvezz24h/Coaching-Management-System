@@ -60,7 +60,7 @@ export function AttendanceSheet({ batchId, date, students }: { batchId: string; 
 
   return (
     <div>
-      <div className="flex flex-col gap-3 border-b pb-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky top-14 z-20 flex flex-col gap-3 border-b bg-card py-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted-foreground tabular-nums">
           <span className="font-medium text-emerald-700 dark:text-emerald-400">{count("PRESENT")} present</span>
           {" · "}
@@ -84,7 +84,7 @@ export function AttendanceSheet({ batchId, date, students }: { batchId: string; 
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-10">#</TableHead>
+            <TableHead className="hidden w-10 sm:table-cell">#</TableHead>
             <TableHead>Student</TableHead>
             <TableHead className="text-right">Status</TableHead>
           </TableRow>
@@ -94,7 +94,7 @@ export function AttendanceSheet({ batchId, date, students }: { batchId: string; 
             const current = marks[s.id] ?? "";
             return (
               <TableRow key={s.id} className={cn(current !== (saved[s.id] ?? "") && "bg-primary/5")}>
-                <TableCell className="text-muted-foreground tabular-nums">{i + 1}</TableCell>
+                <TableCell className="hidden text-muted-foreground tabular-nums sm:table-cell">{i + 1}</TableCell>
                 <TableCell>
                   <span className="font-medium">{s.name}</span>
                   <p className="font-mono text-xs text-muted-foreground">{s.studentCode}</p>
@@ -114,7 +114,7 @@ export function AttendanceSheet({ batchId, date, students }: { batchId: string; 
                           disabled={pending}
                           onClick={() => setMarks((m) => ({ ...m, [s.id]: active ? "" : o.value }))}
                           className={cn(
-                            "h-8 min-w-8 rounded-md border px-2 text-xs font-semibold transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 sm:min-w-20",
+                            "h-8 min-w-8 rounded-md border px-2 text-xs font-semibold pointer-coarse:h-10 pointer-coarse:min-w-11 transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 sm:min-w-20",
                             active ? o.active : "bg-background text-muted-foreground hover:bg-muted",
                           )}
                         >

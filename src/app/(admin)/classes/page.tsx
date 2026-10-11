@@ -57,7 +57,7 @@ export default async function ClassesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Year</TableHead>
-                  <TableHead>Period</TableHead>
+                  <TableHead className="hidden sm:table-cell">Period</TableHead>
                   <TableHead className="text-right">Batches</TableHead>
                   <TableHead />
                 </TableRow>
@@ -68,8 +68,11 @@ export default async function ClassesPage() {
                     <TableCell className="font-medium">
                       {y.name}
                       {y.isCurrent && <Badge className="ml-2">Current</Badge>}
+                      <p className="text-xs font-normal text-muted-foreground sm:hidden">
+                        {formatDate(y.startDate)} – {formatDate(y.endDate)}
+                      </p>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">
+                    <TableCell className="hidden text-muted-foreground sm:table-cell">
                       {formatDate(y.startDate)} – {formatDate(y.endDate)}
                     </TableCell>
                     <TableCell className="text-right tabular-nums">{y._count.batches}</TableCell>

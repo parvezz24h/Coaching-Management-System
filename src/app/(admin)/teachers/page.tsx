@@ -120,7 +120,7 @@ export default async function TeachersPage({ searchParams }: PageProps<"/teacher
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={t.status} />
-                    <p className="mt-0.5 text-xs text-muted-foreground">Since {formatDate(t.joiningDate)}</p>
+                    <p className="mt-0.5 hidden text-xs text-muted-foreground sm:block">Since {formatDate(t.joiningDate)}</p>
                   </TableCell>
                   <TableCell className="pr-4">
                     <div className="flex justify-end gap-1">

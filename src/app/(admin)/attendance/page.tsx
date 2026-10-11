@@ -50,8 +50,8 @@ export default async function AttendancePage({ searchParams }: PageProps<"/atten
           </Link>
         }
       />
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row">
-        <UrlFilter param="batch" options={batchOptions} allLabel="All batches (overview)" />
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+        <UrlFilter param="batch" options={batchOptions} allLabel="All batches (overview)" wide />
         <UrlInput param="date" type="date" defaultValue={today} max={today} label="Attendance date" />
       </div>
     </>
@@ -219,7 +219,11 @@ async function Overview({ date, dateISO, weekday }: { date: Date; dateISO: strin
                     href={`/attendance?batch=${b.id}&date=${dateISO}`}
                     className={buttonVariants({ variant: done ? "ghost" : "outline", size: "sm" })}
                   >
-                    {done ? "Review" : "Take attendance"}
+                    {done ? "Review" : (
+                      <>
+                        Take<span className="hidden sm:inline"> attendance</span>
+                      </>
+                    )}
                   </Link>
                 </TableCell>
               </TableRow>

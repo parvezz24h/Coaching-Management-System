@@ -55,8 +55,8 @@ export default async function AttendanceReportPage({ searchParams }: PageProps<"
           </>
         }
       />
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row print:hidden">
-        <UrlFilter param="batch" options={batchOptions} allLabel="Select a batch" />
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center print:hidden">
+        <UrlFilter param="batch" options={batchOptions} allLabel="Select a batch" wide />
         <UrlInput param="month" type="month" defaultValue={thisMonth} max={thisMonth} label="Month" />
       </div>
     </>

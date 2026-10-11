@@ -129,8 +129,8 @@ export default async function ReceiptPage({ params }: PageProps<"/payments/[id]"
             {payment.allocations.map((a) => (
               <tr key={a.id} className="border-t">
                 <td className="py-2">{a.studentFee.title}</td>
-                <td className="py-2 text-muted-foreground">{formatDate(a.studentFee.dueDate)}</td>
-                <td className="py-2 text-right tabular-nums">{formatMoney(a.amount, symbol)}</td>
+                <td className="py-2 pl-2 whitespace-nowrap text-muted-foreground">{formatDate(a.studentFee.dueDate)}</td>
+                <td className="py-2 pl-2 text-right whitespace-nowrap tabular-nums">{formatMoney(a.amount, symbol)}</td>
               </tr>
             ))}
           </tbody>

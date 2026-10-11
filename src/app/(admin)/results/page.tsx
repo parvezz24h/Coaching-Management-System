@@ -70,7 +70,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
     <>
       {header}
       <div className="mb-4 print:hidden">
-        <UrlFilter param="exam" options={examOptions} allLabel="Select exam" />
+        <UrlFilter param="exam" options={examOptions} allLabel="Select exam" wide />
       </div>
 
       <Card className="mb-4" size="sm">
@@ -123,8 +123,8 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           <table className="w-full text-sm">
             <thead className="bg-muted/50 text-xs">
               <tr className="text-left">
-                <th className="px-3 py-2 font-medium">Pos.</th>
-                <th className="px-3 py-2 font-medium">Student</th>
+                <th className="hidden px-3 py-2 font-medium sm:table-cell">Pos.</th>
+                <th className="sticky left-0 z-10 bg-muted px-3 py-2 font-medium sm:static sm:bg-transparent">Student</th>
                 {specs.map((s) => (
                   <th key={s.id} className="px-2 py-2 text-right font-medium" title={`${s.name} (full ${s.fullMarks}, pass ${s.passMarks})`}>
                     {s.code}
@@ -141,10 +141,13 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
             <tbody>
               {sorted.map(({ student, result, rank }) => (
                 <tr key={student.id} className="border-t">
-                  <td className="px-3 py-2 tabular-nums">{rank ?? "—"}</td>
-                  <td className="px-3 py-2">
-                    <span className="font-medium">{student.name}</span>
-                    <span className="block font-mono text-xs text-muted-foreground">{student.studentCode}</span>
+                  <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{rank ?? "—"}</td>
+                  <td className="sticky left-0 z-10 max-w-40 bg-card px-3 py-2 sm:static sm:max-w-none">
+                    <span className="font-medium">
+                      {rank != null && <span className="text-muted-foreground sm:hidden">{rank}. </span>}
+                      {student.name}
+                    </span>
+                    <span className="block font-mono text-xs whitespace-nowrap text-muted-foreground">{student.studentCode}</span>
                   </td>
                   {result.subjects.map((r) => (
                     <td

@@ -13,7 +13,7 @@ export function MobileNav({ centerName }: { centerName: string }) {
       <SheetTrigger render={<Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu" />}>
         <Menu />
       </SheetTrigger>
-      <SheetContent side="left" className="w-64 p-0" showCloseButton={false}>
+      <SheetContent side="left" className="w-72 max-w-[85vw] p-0" showCloseButton={false}>
         <SheetTitle className="sr-only">Navigation</SheetTitle>
         <SidebarNav centerName={centerName} onNavigate={() => setOpen(false)} />
       </SheetContent>

@@ -152,24 +152,36 @@ async function DuesView({ sp, batches, symbol }: { sp: SearchParams; batches: { 
   ]);
   const balanceOf = (s: typeof outstanding._sum) => toPaisa(s.amount) - toPaisa(s.discount) - toPaisa(s.paidAmount);
   const filtered = Boolean(q || batchId || status !== "OUTSTANDING");
+  const feeRow = (f: (typeof fees)[number]) => ({
+    id: f.id,
+    studentId: f.student.id,
+    title: f.title,
+    status: f.status,
+    amount: formatMoney(f.amount, symbol),
+    paid: f.paidAmount.toString(),
+    discount: f.discount.toString(),
+    dueDate: toDateInput(f.dueDate),
+    note: f.note ?? "",
+    hasPayments: f._count.allocations > 0,
+  });
 
   return (
     <>
-      <div className="mb-4 grid gap-3 sm:grid-cols-3">
+      <div className="mb-4 grid grid-cols-3 gap-2 sm:gap-3">
         <Card size="sm">
           <CardContent>
             <p className="text-xs text-muted-foreground">Outstanding</p>
-            <p className="text-xl font-semibold tabular-nums">{formatMoney(fromPaisa(balanceOf(outstanding._sum)), symbol)}</p>
-            <p className="text-xs text-muted-foreground">{outstanding._count} unpaid or partly paid fees</p>
+            <p className="text-base font-semibold tabular-nums sm:text-xl">{formatMoney(fromPaisa(balanceOf(outstanding._sum)), symbol)}</p>
+            <p className="hidden text-xs text-muted-foreground sm:block">{outstanding._count} unpaid or partly paid fees</p>
           </CardContent>
         </Card>
         <Card size="sm">
           <CardContent>
             <p className="text-xs text-muted-foreground">Overdue</p>
-            <p className={cn("text-xl font-semibold tabular-nums", overdue._count > 0 && "text-destructive")}>
+            <p className={cn("text-base font-semibold tabular-nums sm:text-xl", overdue._count > 0 && "text-destructive")}>
               {formatMoney(fromPaisa(balanceOf(overdue._sum)), symbol)}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="hidden text-xs text-muted-foreground sm:block">
               {overdue._count} fees · {overdueStudents.length} student{overdueStudents.length === 1 ? "" : "s"}
             </p>
           </CardContent>
@@ -177,15 +189,15 @@ async function DuesView({ sp, batches, symbol }: { sp: SearchParams; batches: { 
         <Card size="sm">
           <CardContent>
             <p className="text-xs text-muted-foreground">Due later</p>
-            <p className="text-xl font-semibold tabular-nums">
+            <p className="text-base font-semibold tabular-nums sm:text-xl">
               {formatMoney(fromPaisa(balanceOf(outstanding._sum) - balanceOf(overdue._sum)), symbol)}
             </p>
-            <p className="text-xs text-muted-foreground">Not yet past due date</p>
+            <p className="hidden text-xs text-muted-foreground sm:block">Not yet past due date</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <SearchInput placeholder="Search student, ID, phone or fee" />
         <UrlFilter param="status" options={STATUS_FILTERS.filter((s) => s.value !== "OUTSTANDING")} allLabel="Outstanding" />
         <UrlFilter param="batch" options={batches} allLabel="All batches" />
@@ -199,7 +211,34 @@ async function DuesView({ sp, batches, symbol }: { sp: SearchParams; batches: { 
         />
       ) : (
         <>
-          <Card className="py-0">
+          <ul className="divide-y rounded-xl border bg-card md:hidden">
+            {fees.map((f) => {
+              const overdueRow = (f.status === "UNPAID" || f.status === "PARTIAL") && f.dueDate < today;
+              return (
+                <li key={f.id} className="flex items-start gap-2 p-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <Link href={`/students/${f.student.id}`} className="truncate font-medium hover:underline">
+                        {f.student.name}
+                      </Link>
+                      <StatusBadge status={overdueRow ? "OVERDUE" : f.status} />
+                    </div>
+                    <p className="truncate text-sm text-muted-foreground">{f.title}</p>
+                    <p className={cn("text-xs text-muted-foreground", overdueRow && "font-medium text-destructive")}>
+                      Due {formatDate(f.dueDate)}
+                      {toPaisa(f.paidAmount) > 0 && ` · paid ${formatMoney(f.paidAmount, symbol)}`}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className="font-semibold tabular-nums">{formatMoney(fromPaisa(feeBalance(f)), symbol)}</p>
+                    <p className="text-xs text-muted-foreground">balance</p>
+                  </div>
+                  <FeeRowActions fee={feeRow(f)} />
+                </li>
+              );
+            })}
+          </ul>
+          <Card className="hidden py-0 md:block">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -227,7 +266,7 @@ async function DuesView({ sp, batches, symbol }: { sp: SearchParams; batches: { 
                       <TableCell className="max-w-64">
                         <span className="line-clamp-2">{f.title}</span>
                         {toPaisa(f.discount) > 0 && (
-                          <p className="text-xs text-muted-foreground">{formatMoney(f.discount, symbol)} discount</p>
+                          <p className="hidden text-xs text-muted-foreground sm:block">{formatMoney(f.discount, symbol)} discount</p>
                         )}
                       </TableCell>
                       <TableCell className={cn("hidden md:table-cell", overdueRow && "font-medium text-destructive")}>
@@ -242,20 +281,7 @@ async function DuesView({ sp, batches, symbol }: { sp: SearchParams; batches: { 
                         <StatusBadge status={overdueRow ? "OVERDUE" : f.status} />
                       </TableCell>
                       <TableCell className="pr-4 text-right">
-                        <FeeRowActions
-                          fee={{
-                            id: f.id,
-                            studentId: f.student.id,
-                            title: f.title,
-                            status: f.status,
-                            amount: formatMoney(f.amount, symbol),
-                            paid: f.paidAmount.toString(),
-                            discount: f.discount.toString(),
-                            dueDate: toDateInput(f.dueDate),
-                            note: f.note ?? "",
-                            hasPayments: f._count.allocations > 0,
-                          }}
-                        />
+                        <FeeRowActions fee={feeRow(f)} />
                       </TableCell>
                     </TableRow>
                   );

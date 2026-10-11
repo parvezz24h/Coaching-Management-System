@@ -36,11 +36,11 @@ function StatCard({
     <Card className="h-full transition-colors hover:bg-muted/40">
       <CardContent className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm text-muted-foreground">{title}</p>
-          <p className="mt-1 text-2xl font-semibold tabular-nums">{value}</p>
-          {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
+          <p className="text-xs text-muted-foreground sm:text-sm">{title}</p>
+          <p className="mt-1 text-xl font-semibold tabular-nums sm:text-2xl">{value}</p>
+          {hint && <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{hint}</p>}
         </div>
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <div className="hidden size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:flex">
           <Icon className="size-4.5" />
         </div>
       </CardContent>
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
     <>
       <PageHeader title="Dashboard" description={`Overview for ${formatDate(today)}`} />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
         <StatCard title="Active students" value={String(students)} icon={Users} href="/students" />
         <StatCard title="Active teachers" value={String(teachers)} icon={UserRound} href="/teachers" />
         <StatCard title="Active batches" value={String(batches)} icon={Layers} href="/batches" />
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Student</TableHead>
-                    <TableHead>Class</TableHead>
+                    <TableHead className="hidden sm:table-cell">Class</TableHead>
                     <TableHead className="text-right">Admitted</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -166,8 +166,8 @@ export default async function DashboardPage() {
                         </Link>
                         <p className="text-xs text-muted-foreground">{s.studentCode}</p>
                       </TableCell>
-                      <TableCell>{s.classLevel?.name ?? "—"}</TableCell>
-                      <TableCell className="text-right">{formatDate(s.admissionDate)}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{s.classLevel?.name ?? "—"}</TableCell>
+                      <TableCell className="text-right whitespace-nowrap">{formatDate(s.admissionDate)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -190,8 +190,8 @@ export default async function DashboardPage() {
                   <TableRow>
                     <TableHead>Time</TableHead>
                     <TableHead>Batch</TableHead>
-                    <TableHead>Teacher</TableHead>
-                    <TableHead>Room</TableHead>
+                    <TableHead className="hidden sm:table-cell">Teacher</TableHead>
+                    <TableHead className="hidden sm:table-cell">Room</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -203,9 +203,12 @@ export default async function DashboardPage() {
                       <TableCell>
                         {c.batch.name}
                         {c.subject && <p className="text-xs text-muted-foreground">{c.subject.name}</p>}
+                        <p className="text-xs text-muted-foreground sm:hidden">
+                          {[c.teacher?.name, c.room].filter(Boolean).join(" · ")}
+                        </p>
                       </TableCell>
-                      <TableCell>{c.teacher?.name ?? "—"}</TableCell>
-                      <TableCell>{c.room ?? "—"}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{c.teacher?.name ?? "—"}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{c.room ?? "—"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

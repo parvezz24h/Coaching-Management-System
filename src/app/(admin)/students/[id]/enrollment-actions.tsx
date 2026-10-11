@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { CheckCircle2, UserMinus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/confirm-action";
 import { endEnrollment } from "../actions";
@@ -10,7 +11,12 @@ export function EnrollmentActions({ enrollmentId, batchName }: { enrollmentId: s
   return (
     <div className="flex justify-end gap-1">
       <ConfirmAction
-        trigger={<Button variant="ghost" size="sm">Complete</Button>}
+        trigger={
+          <Button variant="ghost" size="sm" aria-label={`Mark ${batchName} completed`}>
+            <CheckCircle2 />
+            <span className="hidden sm:inline">Complete</span>
+          </Button>
+        }
         title="Mark enrollment completed?"
         description={`The student finished ${batchName}. Their attendance and fee history is kept.`}
         confirmLabel="Mark completed"
@@ -19,8 +25,9 @@ export function EnrollmentActions({ enrollmentId, batchName }: { enrollmentId: s
       />
       <ConfirmAction
         trigger={
-          <Button variant="ghost" size="sm" className="text-destructive">
-            Drop
+          <Button variant="ghost" size="sm" className="text-destructive" aria-label={`Drop from ${batchName}`}>
+            <UserMinus />
+            <span className="hidden sm:inline">Drop</span>
           </Button>
         }
         title="Remove from batch?"

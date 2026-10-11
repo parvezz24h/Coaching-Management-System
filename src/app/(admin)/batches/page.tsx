@@ -82,7 +82,7 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
   return (
     <>
       <PageHeader title="Batches" description="Groups of students taught together" actions={addButton} />
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
         <SearchInput placeholder="Search name or code" />
         <UrlFilter param="year" options={options.academicYears} allLabel="All years" />
         <UrlFilter param="class" options={options.classLevels} allLabel="All classes" />
@@ -109,12 +109,12 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
             <TableHeader>
               <TableRow>
                 <TableHead className="pl-4">Batch</TableHead>
-                <TableHead>Class</TableHead>
+                <TableHead className="hidden sm:table-cell">Class</TableHead>
                 <TableHead className="hidden md:table-cell">Teacher</TableHead>
                 <TableHead className="hidden lg:table-cell">Schedule</TableHead>
                 <TableHead className="text-right">Students</TableHead>
                 <TableHead className="hidden text-right sm:table-cell">Monthly fee</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="hidden sm:table-cell">Status</TableHead>
                 <TableHead className="pr-4" />
               </TableRow>
             </TableHeader>
@@ -128,9 +128,13 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
                     <p className="text-xs text-muted-foreground">
                       <span className="font-mono">{b.code}</span> · {b.academicYear.name}
                       {b.subject && ` · ${b.subject.name}`}
+                      <span className="sm:hidden">
+                        {" "}· {b.classLevel.name}
+                        {b.status !== "ACTIVE" && " · Inactive"}
+                      </span>
                     </p>
                   </TableCell>
-                  <TableCell>{b.classLevel.name}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{b.classLevel.name}</TableCell>
                   <TableCell className="hidden md:table-cell">{b.teacher?.name ?? "—"}</TableCell>
                   <TableCell className="hidden max-w-52 lg:table-cell">
                     <span className="line-clamp-2">{b.scheduleNote ?? "—"}</span>
@@ -143,7 +147,7 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
                   <TableCell className="hidden text-right tabular-nums sm:table-cell">
                     {b.monthlyFee != null ? formatMoney(b.monthlyFee, symbol) : "—"}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <StatusBadge status={b.status} />
                   </TableCell>
                   <TableCell className="pr-4">

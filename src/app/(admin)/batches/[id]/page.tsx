@@ -111,7 +111,7 @@ export default async function BatchDetailPage({ params }: PageProps<"/batches/[i
 
       <Card>
         <CardContent>
-          <dl className="grid gap-4 sm:grid-cols-3">
+          <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {facts.map(([label, value]) => (
               <div key={label}>
                 <dt className="text-xs text-muted-foreground">{label}</dt>
