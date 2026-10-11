@@ -120,9 +120,9 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
             </TableHeader>
             <TableBody>
               {batches.map((b) => (
-                <TableRow key={b.id}>
+                <TableRow key={b.id} className="relative cursor-pointer">
                   <TableCell className="pl-4">
-                    <Link href={`/batches/${b.id}`} className="font-medium hover:underline">
+                    <Link href={`/batches/${b.id}`} className="font-medium hover:underline after:absolute after:inset-0 after:content-['']">
                       {b.name}
                     </Link>
                     <p className="text-xs text-muted-foreground">
@@ -151,7 +151,7 @@ export default async function BatchesPage({ searchParams }: PageProps<"/batches"
                     <StatusBadge status={b.status} />
                   </TableCell>
                   <TableCell className="pr-4">
-                    <div className="flex justify-end gap-1">
+                    <div className="relative z-10 flex justify-end gap-1">
                       <BatchDialog
                         id={b.id}
                         options={options}

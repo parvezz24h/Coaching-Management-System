@@ -96,9 +96,9 @@ export default async function ExamsPage({ searchParams }: PageProps<"/exams">) {
             </TableHeader>
             <TableBody>
               {exams.map((e) => (
-                <TableRow key={e.id}>
+                <TableRow key={e.id} className="relative cursor-pointer">
                   <TableCell className="pl-4">
-                    <Link href={`/exams/${e.id}`} className="font-medium hover:underline">
+                    <Link href={`/exams/${e.id}`} className="font-medium hover:underline after:absolute after:inset-0 after:content-['']">
                       {e.name}
                     </Link>
                     <p className="text-xs text-muted-foreground">

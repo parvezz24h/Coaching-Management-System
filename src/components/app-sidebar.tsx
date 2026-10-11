@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { BRAND_ICON as Brand, NAV_SECTIONS } from "@/components/nav-items";
@@ -45,6 +45,7 @@ export function SidebarNavView({ centerName, onNavigate, pathname }: Props & { p
                     >
                       <Icon className="size-4 shrink-0" />
                       {label}
+                      <PendingDot />
                     </Link>
                   </li>
                 );
@@ -54,5 +55,19 @@ export function SidebarNavView({ centerName, onNavigate, pathname }: Props & { p
         ))}
       </nav>
     </div>
+  );
+}
+
+/** Pulses on the clicked link until its page starts rendering. */
+function PendingDot() {
+  const { pending } = useLinkStatus();
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "ml-auto size-1.5 rounded-full bg-primary transition-opacity duration-200",
+        pending ? "opacity-100 motion-safe:animate-pulse" : "opacity-0",
+      )}
+    />
   );
 }

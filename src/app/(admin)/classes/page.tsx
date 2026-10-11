@@ -30,7 +30,7 @@ export default async function ClassesPage() {
 
   return (
     <>
-      <PageHeader title="Classes & academic years" />
+      <PageHeader title="Classes & years" />
       <div className="grid gap-4 xl:grid-cols-2">
         <Card>
           <CardHeader>

@@ -157,9 +157,9 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
               </TableHeader>
               <TableBody>
                 {payments.map((p) => (
-                  <TableRow key={p.id} className={cn(p.reversedBy && "text-muted-foreground")}>
+                  <TableRow key={p.id} className={cn("relative cursor-pointer", p.reversedBy && "text-muted-foreground")}>
                     <TableCell className="pl-4">
-                      <Link href={`/payments/${p.id}`} className={cn("font-mono text-xs font-medium hover:underline", p.reversedBy && "line-through")}>
+                      <Link href={`/payments/${p.id}`} className={cn("font-mono text-xs font-medium hover:underline after:absolute after:inset-0 after:content-['']", p.reversedBy && "line-through")}>
                         {p.receiptNo}
                       </Link>
                       <p className="text-xs text-muted-foreground">
@@ -168,7 +168,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/payment
                       </p>
                     </TableCell>
                     <TableCell>
-                      <Link href={`/students/${p.student.id}`} className="hover:underline">
+                      <Link href={`/students/${p.student.id}`} className="relative z-10 hover:underline">
                         {p.student.name}
                       </Link>
                       <p className="font-mono text-xs text-muted-foreground">{p.student.studentCode}</p>

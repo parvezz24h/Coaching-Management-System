@@ -117,9 +117,9 @@ export default async function StudentsPage({ searchParams }: PageProps<"/student
               </TableHeader>
               <TableBody>
                 {students.map((s) => (
-                  <TableRow key={s.id}>
+                  <TableRow key={s.id} className="relative cursor-pointer">
                     <TableCell className="pl-4">
-                      <Link href={`/students/${s.id}`} className="font-medium hover:underline">
+                      <Link href={`/students/${s.id}`} className="font-medium hover:underline after:absolute after:inset-0 after:content-['']">
                         {s.name}
                       </Link>
                       <p className="font-mono text-xs text-muted-foreground">{s.studentCode}</p>

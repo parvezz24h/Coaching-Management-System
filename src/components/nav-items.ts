@@ -31,7 +31,7 @@ export const NAV_SECTIONS = [
   {
     label: "Academics",
     items: [
-      { href: "/classes", label: "Classes & Years", icon: School },
+      { href: "/classes", label: "Classes & years", icon: School },
       { href: "/subjects", label: "Subjects", icon: BookOpen },
       { href: "/batches", label: "Batches", icon: Layers },
       { href: "/timetable", label: "Timetable", icon: CalendarClock },
@@ -41,7 +41,7 @@ export const NAV_SECTIONS = [
   {
     label: "Finance",
     items: [
-      { href: "/fees", label: "Fees & Dues", icon: Wallet },
+      { href: "/fees", label: "Fees & dues", icon: Wallet },
       { href: "/payments", label: "Payments", icon: Receipt },
     ],
   },

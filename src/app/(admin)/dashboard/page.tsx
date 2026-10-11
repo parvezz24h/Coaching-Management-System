@@ -33,7 +33,7 @@ function StatCard({
   href?: string;
 }) {
   const body = (
-    <Card className="h-full transition-colors hover:bg-muted/40">
+    <Card className="h-full transition-[background-color,transform,box-shadow] duration-200 hover:bg-muted/40 motion-safe:group-hover/stat:-translate-y-0.5 group-hover/stat:shadow-md">
       <CardContent className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs text-muted-foreground sm:text-sm">{title}</p>
@@ -46,7 +46,16 @@ function StatCard({
       </CardContent>
     </Card>
   );
-  return href ? <Link href={href}>{body}</Link> : body;
+  return href ? (
+    <Link
+      href={href}
+      className="group/stat rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      {body}
+    </Link>
+  ) : (
+    body
+  );
 }
 
 export default async function DashboardPage() {
