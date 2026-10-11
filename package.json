@@ -14,7 +14,12 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "db:up": "docker compose up -d",
-    "db:seed:demo": "tsx prisma/seed-demo.ts"
+    "db:seed:demo": "tsx prisma/seed-demo.ts",
+    "test": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:all": "vitest run",
+    "db:backup": "scripts/backup.sh",
+    "db:verify-backup": "scripts/verify-backup.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -50,7 +55,8 @@
     "prisma": "7.10.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   },
   "packageManager": "pnpm@10.33.0"
 }

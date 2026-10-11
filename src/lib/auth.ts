@@ -12,6 +12,15 @@ export const auth = betterAuth({
     disableSignUp: true,
     minPasswordLength: 8,
   },
+  rateLimit: {
+    // Enabled in production by default. Database storage makes limits hold
+    // across serverless instances (memory storage is per instance).
+    storage: "database",
+    customRules: {
+      "/sign-in/email": { window: 60, max: 5 },
+      "/change-password": { window: 60, max: 5 },
+    },
+  },
   session: {
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,

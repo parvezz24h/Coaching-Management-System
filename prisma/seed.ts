@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { hashPassword } from "better-auth/crypto";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { createOrReactivateAdmin } from "../src/lib/admins";
 import { DEFAULT_CLASS_LEVELS, DEFAULT_GRADING_SCALE } from "../src/lib/constants";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
@@ -21,34 +21,13 @@ const DEFAULT_SUBJECTS = [
 
 async function seedAdmin() {
   const name = process.env.ADMIN_NAME || "Administrator";
-  const email = process.env.ADMIN_EMAIL?.toLowerCase();
+  const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
   if (!email || !password) throw new Error("Set ADMIN_EMAIL and ADMIN_PASSWORD in .env");
   if (password.length < 8) throw new Error("ADMIN_PASSWORD must be at least 8 characters");
 
-  const existing = await db.user.findUnique({ where: { email } });
-  if (existing) {
-    console.log(`Admin ${email} already exists — leaving password unchanged.`);
-    return;
-  }
-  const id = crypto.randomUUID();
-  await db.user.create({
-    data: {
-      id,
-      name,
-      email,
-      emailVerified: true,
-      accounts: {
-        create: {
-          id: crypto.randomUUID(),
-          accountId: id,
-          providerId: "credential",
-          password: await hashPassword(password),
-        },
-      },
-    },
-  });
-  console.log(`Created admin ${email}`);
+  const { status } = await createOrReactivateAdmin(db, { name, email, password });
+  console.log(status === "exists" ? `Admin ${email} already exists — leaving password unchanged.` : `Admin ${email} ${status}.`);
 }
 
 async function main() {
