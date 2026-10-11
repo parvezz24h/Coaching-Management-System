@@ -1,0 +1,516 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────
+// Authentication (Better Auth). Every User is an Admin — no role enum.
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  paymentsReceived Payment[]
+  auditLogs        AuditLog[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum StudentStatus {
+  ACTIVE
+  INACTIVE
+  LEFT
+}
+
+enum ActiveStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  DROPPED
+  COMPLETED
+}
+
+enum Weekday {
+  SAT
+  SUN
+  MON
+  TUE
+  WED
+  THU
+  FRI
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+enum FeeType {
+  MONTHLY_TUITION
+  ADMISSION
+  EXAM
+  OTHER
+}
+
+enum StudentFeeStatus {
+  UNPAID
+  PARTIAL
+  PAID
+  WAIVED
+}
+
+enum PaymentType {
+  PAYMENT
+  REVERSAL
+}
+
+enum ExamStatus {
+  DRAFT
+  PUBLISHED
+}
+
+// ─────────────────────────────────────────────────────────────
+// Academic structure
+// ─────────────────────────────────────────────────────────────
+
+model AcademicYear {
+  id        String   @id @default(cuid())
+  name      String   @unique // e.g. "2026"
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  isCurrent Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  batches Batch[]
+  exams   Exam[]
+}
+
+model ClassLevel {
+  id        String   @id @default(cuid())
+  name      String   @unique // "Class 1" … "Class 12", "SSC", "HSC"
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Student[]
+  batches  Batch[]
+  feePlans FeePlan[]
+  exams    Exam[]
+}
+
+model Subject {
+  id        String   @id @default(cuid())
+  name      String
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teachers      Teacher[]
+  batches       Batch[]
+  classSessions ClassSession[]
+  examSubjects  ExamSubject[]
+}
+
+// ─────────────────────────────────────────────────────────────
+// People
+// ─────────────────────────────────────────────────────────────
+
+model Student {
+  id                 String        @id @default(cuid())
+  studentCode        String        @unique // generated, e.g. "STU-2026-0001"
+  name               String
+  gender             Gender?
+  dateOfBirth        DateTime?     @db.Date
+  phone              String?
+  email              String?
+  address            String?
+  schoolName         String?
+  classLevelId       String?
+  classLevel         ClassLevel?   @relation(fields: [classLevelId], references: [id], onDelete: SetNull)
+  guardianName       String
+  guardianPhone      String
+  guardianRelation   String?
+  guardianOccupation String?
+  admissionDate      DateTime      @default(now()) @db.Date
+  status             StudentStatus @default(ACTIVE)
+  notes              String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  enrollments Enrollment[]
+  attendances Attendance[]
+  fees        StudentFee[]
+  payments    Payment[]
+  marks       Mark[]
+
+  @@index([name])
+  @@index([status])
+  @@index([guardianPhone])
+}
+
+model Teacher {
+  id            String       @id @default(cuid())
+  teacherCode   String       @unique // generated, e.g. "TCH-0001"
+  name          String
+  phone         String
+  email         String?
+  address       String?
+  qualification String?
+  joiningDate   DateTime     @default(now()) @db.Date
+  status        ActiveStatus @default(ACTIVE)
+  notes         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  subjects      Subject[]
+  batches       Batch[]
+  classSessions ClassSession[]
+
+  @@index([name])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Batches, schedule and attendance
+// ─────────────────────────────────────────────────────────────
+
+model Batch {
+  id             String       @id @default(cuid())
+  name           String
+  code           String       @unique
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Restrict)
+  classLevelId   String
+  classLevel     ClassLevel   @relation(fields: [classLevelId], references: [id], onDelete: Restrict)
+  subjectId      String?
+  subject        Subject?     @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  teacherId      String?
+  teacher        Teacher?     @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+  room           String?
+  scheduleNote   String? // human-readable summary, e.g. "Sat/Mon/Wed 4–5:30 PM"
+  capacity       Int?
+  monthlyFee     Decimal?     @db.Decimal(12, 2)
+  startDate      DateTime?    @db.Date
+  status         ActiveStatus @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  enrollments   Enrollment[]
+  classSessions ClassSession[]
+  attendances   Attendance[]
+  feePlans      FeePlan[]
+  exams         Exam[]
+
+  @@index([academicYearId])
+  @@index([classLevelId])
+}
+
+model Enrollment {
+  id         String           @id @default(cuid())
+  studentId  String
+  student    Student          @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  batchId    String
+  batch      Batch            @relation(fields: [batchId], references: [id], onDelete: Restrict)
+  enrolledAt DateTime         @default(now()) @db.Date
+  endedAt    DateTime?        @db.Date
+  status     EnrollmentStatus @default(ACTIVE)
+  // Flat monthly discount applied when generating this student's tuition fee.
+  discount   Decimal          @default(0) @db.Decimal(12, 2)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  fees StudentFee[]
+
+  @@unique([studentId, batchId])
+  @@index([batchId])
+}
+
+// A recurring weekly slot in the timetable.
+model ClassSession {
+  id        String   @id @default(cuid())
+  batchId   String
+  batch     Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  subjectId String?
+  subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  teacherId String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+  weekday   Weekday
+  startTime String // "16:00"
+  endTime   String // "17:30"
+  room      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([batchId])
+  @@index([weekday])
+}
+
+model Attendance {
+  id        String           @id @default(cuid())
+  studentId String
+  student   Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  batchId   String
+  batch     Batch            @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  date      DateTime         @db.Date
+  status    AttendanceStatus
+  note      String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([studentId, batchId, date])
+  @@index([batchId, date])
+  @@index([date])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Fees and payments
+// ─────────────────────────────────────────────────────────────
+
+model FeePlan {
+  id           String      @id @default(cuid())
+  name         String
+  type         FeeType     @default(MONTHLY_TUITION)
+  amount       Decimal     @db.Decimal(12, 2)
+  batchId      String?
+  batch        Batch?      @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  classLevelId String?
+  classLevel   ClassLevel? @relation(fields: [classLevelId], references: [id], onDelete: SetNull)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  studentFees StudentFee[]
+}
+
+model StudentFee {
+  id           String           @id @default(cuid())
+  studentId    String
+  student      Student          @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  feePlanId    String?
+  feePlan      FeePlan?         @relation(fields: [feePlanId], references: [id], onDelete: SetNull)
+  enrollmentId String?
+  enrollment   Enrollment?      @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+  title        String // e.g. "Tuition — October 2026"
+  period       String? // "2026-10" for monthly fees
+  amount       Decimal          @db.Decimal(12, 2)
+  discount     Decimal          @default(0) @db.Decimal(12, 2)
+  // Kept in sync with the sum of payment allocations (reversals are negative)
+  // inside the same transaction that writes them.
+  paidAmount   Decimal          @default(0) @db.Decimal(12, 2)
+  dueDate      DateTime         @db.Date
+  status       StudentFeeStatus @default(UNPAID)
+  note         String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  allocations PaymentAllocation[]
+
+  @@unique([studentId, feePlanId, period])
+  // One tuition charge per enrollment per month.
+  @@unique([enrollmentId, period])
+  @@index([status])
+  @@index([dueDate])
+}
+
+// Payments are never deleted. A correction is a new REVERSAL row with a
+// negative amount that points at the original via reversalOfId.
+model Payment {
+  id           String      @id @default(cuid())
+  receiptNo    String      @unique
+  type         PaymentType @default(PAYMENT)
+  studentId    String
+  student      Student     @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  amount       Decimal     @db.Decimal(12, 2)
+  method       String      @default("CASH")
+  paidAt       DateTime    @default(now())
+  note         String?
+  receivedById String?
+  receivedBy   User?       @relation(fields: [receivedById], references: [id], onDelete: SetNull)
+  reversalOfId String?     @unique
+  reversalOf   Payment?    @relation("PaymentReversal", fields: [reversalOfId], references: [id], onDelete: Restrict)
+  reversedBy   Payment?    @relation("PaymentReversal")
+  createdAt    DateTime    @default(now())
+
+  allocations PaymentAllocation[]
+
+  @@index([studentId])
+  @@index([paidAt])
+}
+
+// How a payment (one receipt) is split across a student's fees.
+model PaymentAllocation {
+  id           String     @id @default(cuid())
+  paymentId    String
+  payment      Payment    @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  studentFeeId String
+  studentFee   StudentFee @relation(fields: [studentFeeId], references: [id], onDelete: Restrict)
+  amount       Decimal    @db.Decimal(12, 2)
+
+  @@index([paymentId])
+  @@index([studentFeeId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Exams and results
+// ─────────────────────────────────────────────────────────────
+
+model Exam {
+  id             String       @id @default(cuid())
+  name           String
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Restrict)
+  classLevelId   String?
+  classLevel     ClassLevel?  @relation(fields: [classLevelId], references: [id], onDelete: SetNull)
+  batchId        String?
+  batch          Batch?       @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  startDate      DateTime     @db.Date
+  endDate        DateTime?    @db.Date
+  status         ExamStatus   @default(DRAFT)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  subjects ExamSubject[]
+}
+
+model ExamSubject {
+  id        String    @id @default(cuid())
+  examId    String
+  exam      Exam      @relation(fields: [examId], references: [id], onDelete: Cascade)
+  subjectId String
+  subject   Subject   @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  fullMarks Decimal   @db.Decimal(6, 2)
+  passMarks Decimal   @db.Decimal(6, 2)
+  examDate  DateTime? @db.Date
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  marks Mark[]
+
+  @@unique([examId, subjectId])
+}
+
+model Mark {
+  id            String      @id @default(cuid())
+  examSubjectId String
+  examSubject   ExamSubject @relation(fields: [examSubjectId], references: [id], onDelete: Cascade)
+  studentId     String
+  student       Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  obtained      Decimal?    @db.Decimal(6, 2)
+  isAbsent      Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([examSubjectId, studentId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// System
+// ─────────────────────────────────────────────────────────────
+
+model CenterSettings {
+  id              String   @id @default("default")
+  name            String   @default("My Coaching Center")
+  address         String?
+  phone           String?
+  email           String?
+  studentIdPrefix String   @default("STU")
+  teacherIdPrefix String   @default("TCH")
+  receiptPrefix   String   @default("RCP")
+  currencySymbol  String   @default("৳")
+  // [{ grade, minPercent, gpa }] sorted high → low
+  gradingScale    Json
+  updatedAt       DateTime @updatedAt
+}
+
+// Atomic counters for human-readable codes (student IDs, receipt numbers).
+model Counter {
+  key   String @id
+  value Int    @default(0)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String // "student.create", "payment.reverse", …
+  entity    String
+  entityId  String?
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}

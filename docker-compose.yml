@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:17
+    container_name: coaching-cms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cms
+      POSTGRES_PASSWORD: cms_dev_password
+      POSTGRES_DB: coaching_cms
+    ports:
+      - "5434:5432"
+    volumes:
+      - cms_pgdata:/var/lib/postgresql/data
+volumes:
+  cms_pgdata:
